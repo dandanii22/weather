@@ -11,7 +11,7 @@ const DayCard = ({ item, editBtn, onDel, showDatailPage }) => {
             <i className="xi-minus"></i>
           </div>
         )}
-        <div className="card" onClick={showDatailPage}>
+        <div className="card" onClick={() => showDatailPage(item)}>
           <p className="cityname">
             {city} , {country}
           </p>
@@ -20,7 +20,7 @@ const DayCard = ({ item, editBtn, onDel, showDatailPage }) => {
             src={`../../public/images/${imgCode}.png`}
             alt="weathericon"
           />
-          <p className="temper">{temp}℃</p>
+          <p className="temper">{Math.round(temp * 10) / 10}℃</p>
         </div>
       </div>
     </DayCardWrap>

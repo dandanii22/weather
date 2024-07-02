@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddDetailWrap } from "../styled/Style";
 import axios from "axios";
+import useDebounce from "../hooks/useDebounce";
 
 // eslint-disable-next-line react/prop-types
 // 설마 페이지마다 test용으로 useEffect 걸어서 데이터 연결해줘야하는건가..?
-const AddDetail = ({ keyword, test }) => {
+const AddDetail = ({ keyword, hours }) => {
   const [temp_min, setTemp_min] = useState(0);
   const [temp_max, setTemp_max] = useState(0);
   const [temp_feel, setTemp_feel] = useState(0);
@@ -20,25 +21,29 @@ const AddDetail = ({ keyword, test }) => {
 
   const [clouds, setClouds] = useState(0);
   const [visibility, setVisibility] = useState(0);
-  const getDetailWeatherData = (keyword) => {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${keyword}&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
-    // const url = `https://api.openweathermap.org/data/2.5/weather?q=tokyo&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
-    axios.get(url).then((res) => {
-      const data = res.data;
-      setTemp_min(data.main.temp_min);
-      setTemp_max(data.main.temp_max);
-      setTemp_feel(data.main.feels_like);
-      setSunrise(data.sys.sunrise);
-      setSunset(data.sys.sunset);
-      setWind_speed(data.wind.speed);
-      setWind_deg(data.wind.deg);
-      setHumidity(data.main.humidity);
-      setPressure(data.main.pressure);
-      setClouds(data.clouds.all);
-      setVisibility(data.visibility / 1000);
-    });
-  };
-  getDetailWeatherData(keyword);
+
+  const debouncedValue = useDebounce(keyword, 1000);
+
+  useEffect(() => {
+    if (debouncedValue) {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${debouncedValue}&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
+      // const url = `https://api.openweathermap.org/data/2.5/weather?q=tokyo&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
+      axios.get(url).then((res) => {
+        const data = res.data;
+        setTemp_min(data.main.temp_min);
+        setTemp_max(data.main.temp_max);
+        setTemp_feel(data.main.feels_like);
+        setSunrise(data.sys.sunrise);
+        setSunset(data.sys.sunset);
+        setWind_speed(data.wind.speed);
+        setWind_deg(data.wind.deg);
+        setHumidity(data.main.humidity);
+        setPressure(data.main.pressure);
+        setClouds(data.clouds.all);
+        setVisibility(data.visibility / 1000);
+      });
+    }
+  }, [debouncedValue]);
 
   const timeConvert = (time) => {
     let koreaTime = new Date(time * 1000);
@@ -47,16 +52,16 @@ const AddDetail = ({ keyword, test }) => {
   };
 
   return (
-    <AddDetailWrap>
+    <AddDetailWrap className={hours >= 18 || hours < 6 ? "active" : ""}>
       <div className="detail_inner">
         <p>
-          ✔️ <span>최저기온</span> : {temp_min}℃
+          ✔️ <span>최저기온</span> : {Math.round(temp_min)}℃
         </p>
         <p>
-          ✔️ <span>최고기온</span> : {temp_max}℃
+          ✔️ <span>최고기온</span> : {Math.round(temp_max)}℃
         </p>
         <p>
-          ✔️ <span>체감온도</span> : {temp_feel}℃
+          ✔️ <span>체감온도</span> : {Math.round(temp_feel)}℃
         </p>
         <br />
         <p>

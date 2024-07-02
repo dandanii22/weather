@@ -5,6 +5,9 @@ export const MainWrap = styled.div`
   background: #5b9ee0;
   &.on {
     background: #11122c;
+    h2 {
+      color: #fff;
+    }
   }
   padding-bottom: 20%;
   h2 {
@@ -13,9 +16,6 @@ export const MainWrap = styled.div`
     margin-bottom: 40px;
     text-align: center;
     font-weight: 700;
-    &.on {
-      color: #fff;
-    }
   }
 
   .cardwrap {
@@ -96,7 +96,6 @@ export const DayCardWrap = styled.div`
     background: #aedbff;
     display: flex;
     justify-content: space-around;
-
     align-items: center;
     cursor: pointer;
     margin-bottom: 30px;
@@ -138,6 +137,7 @@ export const NightCardWrap = styled.div`
     text-align: center;
     line-height: 30px;
     z-index: 1000;
+    cursor: pointer;
 
     i {
       color: #000;
@@ -148,6 +148,7 @@ export const NightCardWrap = styled.div`
     }
     &:hover i {
       color: #fff;
+      cursor: pointer;
     }
   }
   .wrap {
@@ -157,19 +158,20 @@ export const NightCardWrap = styled.div`
     border-radius: 30px;
     background: #414156;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-bottom: 30px;
+    cursor: pointer;
+
+    &:hover {
+      background: #7c7c95;
+    }
     .card {
+      height: 200px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-around;
       align-items: center;
-
-      &:hover {
-        background: #7c7c95;
-      }
 
       .cityname {
         font-weight: 700;
@@ -261,6 +263,29 @@ export const DetailCardWrap = styled.div`
   left: 50%;
   transform: translateX(-50%);
 
+  &.active {
+    background: #414156;
+
+    i {
+      color: #fff;
+    }
+    .detailWeather {
+      background: #d9d9dd;
+    }
+
+    .tag {
+      border-bottom: 1px solid #fff;
+      p {
+        color: #fff;
+
+        &.on {
+          color: yellow;
+          border-bottom: 3px solid yellow;
+        }
+      }
+    }
+  }
+
   .icon {
     display: flex;
     justify-content: space-between;
@@ -283,6 +308,7 @@ export const DetailCardWrap = styled.div`
     margin: auto;
     border-radius: 30px;
     text-align: center;
+
     img {
       width: 150px;
       height: 150px;
@@ -297,17 +323,44 @@ export const DetailCardWrap = styled.div`
       font-size: 35px;
     }
   }
+  .tag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid #000;
+    width: 500px;
+    text-align: center;
+    margin: auto;
+
+    p {
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 20px;
+      width: 250px;
+      padding-bottom: 10px;
+
+      &.on {
+        color: red;
+        border-bottom: 3px solid red;
+        z-index: 5;
+      }
+    }
+  }
 `;
 
 export const AddDetailWrap = styled.div`
   width: 500px;
-  height: 380px;
+  height: 310px;
   background: #eff8ff;
   margin: auto;
   border-radius: 30px;
   margin-top: 20px;
   line-height: 1.3;
   overflow-y: scroll;
+
+  &.active {
+    background: #d9d9dd;
+  }
   &::-webkit-scrollbar {
     width: 10px;
     height: 5px;
@@ -325,6 +378,78 @@ export const AddDetailWrap = styled.div`
       font-size: 20px;
       span {
         font-weight: 700;
+      }
+    }
+  }
+`;
+
+export const HourlyDetail = styled.div`
+  width: 500px;
+  height: 310px;
+  background: #eff8ff;
+  margin: auto;
+  border-radius: 30px;
+  margin-top: 20px;
+  line-height: 1.3;
+  overflow-y: scroll;
+
+  &.active {
+    background: #d9d9dd;
+  }
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 5px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+
+  .detail_inner {
+    padding: 0 30px;
+    .row {
+      &:first-child .date {
+        border-top: none;
+        padding-top: 20px;
+        margin-top: 0;
+      }
+      .date {
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+        font-size: 23px;
+        margin-bottom: 20px;
+        padding-top: 20px;
+        margin-top: 20px;
+        border-top: 1px solid #000;
+
+        i {
+          margin-right: 10px;
+          color: red;
+        }
+      }
+      .timewrap {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+
+        .row-time {
+          font-weight: 700;
+          font-size: 20px;
+          margin-right: 230px;
+        }
+
+        img {
+          width: 50px;
+          height: 50px;
+          margin-right: 20px;
+        }
+
+        .row-temp {
+          font-size: 20px;
+        }
       }
     }
   }

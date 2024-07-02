@@ -11,19 +11,14 @@ import DetailCard from "./DetailCard";
 const Main = () => {
   // 검색한 도시 정보
   const [keyword, setKeyword] = useState("");
-
   // 날씨 정보
   const [weatherData, setWeatherData] = useState([]);
-
-  // const [initalizeData] = useState(["busan", "seoul", "lon", "london"]);
-
   // input창 focus
   const textRef = useRef(null);
-  const [editBtn, setEditBtn] = useState(true);
-  const test = ["busan", "seoul", "lon", "london"];
+  // 초기값
+  const test = ["seoul", "incheon", "dalian", "london"];
 
   useEffect(() => {
-    console.log(test);
     const InitialData = async () => {
       for (let i = 0; i < test.length; i++) {
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${test[i]}&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
@@ -57,24 +52,19 @@ const Main = () => {
     setKeyword(value);
   };
 
-  //input form 태그이기 때문에  e.preventDefault(); 처리
-  const onSubmit = (e) => {
+  //input form 태그 관련 코드
+  const onSubmit = async (e) => {
     e.preventDefault();
     const koreanRegex = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
     if (keyword.match(koreanRegex)) {
       alert("도시명을 영어로 입력해주세요");
       return;
     }
-
-    // 한글이 포함되지 않은 경우, API 호출
-    // setWeatherData(keyword);
-    textRef.current.focus();
-
-    // DetailCard를 보여주도록 설정
     setShowDetail(true);
   };
 
-  // 수정버튼, 삭제
+  // 수정, 삭제
+  const [editBtn, setEditBtn] = useState(true);
   const onEdit = () => {
     setEditBtn(!editBtn);
   };
@@ -82,10 +72,38 @@ const Main = () => {
     setWeatherData(weatherData.filter((item) => id !== item.id));
   };
 
-  //클릭 시 디테일창 페이지
+  //즐겨찾기 추가
+  const addFav = () => {
+    // 즐겨찾기에 이미 포함되어있는지 확인
+    const isAlreadyFav = weatherData.some(
+      (item) => item.city.toLowerCase() === keyword.toLowerCase()
+    );
+    if (isAlreadyFav) {
+      alert("이미 즐겨찾기에 등록되어 있습니다.");
+    } else {
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${keyword}&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
+      axios.get(url).then((res) => {
+        const data = res.data;
+        setWeatherData([
+          ...weatherData,
+          {
+            city: keyword,
+            country: data.sys.country,
+            temp: data.main.temp,
+            imgCode: data.weather[0].icon,
+            loading: true,
+          },
+        ]);
+      });
+      setShowDetail(false);
+    }
+  };
+
+  //클릭 시 디테일창 오픈
   const [showDetail, setShowDetail] = useState(false);
-  const showDatailPage = () => {
-    setShowDetail(!showDetail);
+  const showDatailPage = (clickedItem) => {
+    setShowDetail(true);
+    setKeyword(clickedItem.city); // 선택한 값의 city값만 출력
   };
 
   //디테일창 닫기
@@ -93,93 +111,48 @@ const Main = () => {
   const closeDetail = () => {
     setDetailClose(!detailClose);
     setShowDetail(!showDetail);
+    setKeyword("");
   };
-  // 즐겨찾기 추가
-  // const [fav, setFav] = useState(false);
-  // const addFav = () => {
-  //   if (weatherData.includes(keyword) === true) {
-  //     setWeatherData([...weatherData, keyword]);
-  //     setFav(true);
-  //   } else {
-  //     alert("이미 즐겨찾기에 등록되어 있습니다.");
-  //   }
-  //   setShowDetail(false);
-  // };
-
-  const searchData = () => {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${keyword}&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
-    axios
-      .get(url)
-      .then((res) => {
-        const data = res.data;
-        setWeatherData([
-          ...weatherData,
-          {
-            id: data.id,
-            city: data.name,
-            country: data.sys.country,
-            temp: data.main.temp,
-            imgCode: data.weather[0].icon,
-            loading: false,
-          },
-        ]);
-
-        setKeyword("");
-      })
-      .catch((error) => {
-        console.error("Error fetching weather data: ", error);
-      });
-  };
-
-  // const enterData = (e) => {
-  //   if (e.keyCode === 13) {
-  //     searchData(e);
-  //   }
-  // };
 
   return (
     <MainWrap className={hours >= 18 || hours < 6 ? "on" : ""}>
-      <h2 className={hours >= 18 || hours < 6 ? "on" : ""}>
-        What's the weather like today?
-      </h2>
+      <h2>What's the weather like today?</h2>
       <SearchInput
         onSearch={onSearch}
         keyword={keyword}
         onSubmit={onSubmit}
         textRef={textRef}
         setKeyword={setKeyword}
-        searchData={searchData}
       />
       <div className="cardwrap">
-        {Array.isArray(weatherData) &&
-          weatherData.map((item, index) => {
-            return hours >= 18 || hours < 6 ? (
-              <NightCard
-                key={index}
-                item={item}
-                editBtn={editBtn}
-                onDel={onDel}
-                showDatailPage={showDatailPage}
-              />
-            ) : (
-              <DayCard
-                key={index}
-                item={item}
-                editBtn={editBtn}
-                onDel={onDel}
-                showDatailPage={showDatailPage}
-              />
-            );
-          })}
+        {weatherData.map((item, index) => {
+          return hours >= 18 || hours < 6 ? (
+            <NightCard
+              key={index}
+              item={item}
+              editBtn={editBtn}
+              onDel={onDel}
+              showDatailPage={showDatailPage}
+            />
+          ) : (
+            <DayCard
+              key={index}
+              item={item}
+              editBtn={editBtn}
+              onDel={onDel}
+              showDatailPage={showDatailPage}
+            />
+          );
+        })}
       </div>
 
       <EditBtn hours={hours} onEdit={onEdit} editBtn={editBtn} />
       {showDetail && (
         <DetailCard
           keyword={keyword}
-          searchData={searchData}
           closeDetail={closeDetail}
-          setWeatherData={setWeatherData}
+          hours={hours}
+          addFav={addFav}
         />
       )}
     </MainWrap>

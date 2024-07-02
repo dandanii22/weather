@@ -1,5 +1,5 @@
 import { InputWrap } from "../styled/Style";
-const SearchInput = ({ onSearch, keyword, onSubmit, textRef, searchData }) => {
+const SearchInput = ({ onSearch, keyword, onSubmit, textRef }) => {
   return (
     <InputWrap onSubmit={onSubmit}>
       <input
@@ -12,7 +12,7 @@ const SearchInput = ({ onSearch, keyword, onSubmit, textRef, searchData }) => {
       />
 
       <button type="submit">
-        <i className="xi-search" onClick={() => searchData(keyword)}></i>
+        <i className="xi-search"></i>
       </button>
     </InputWrap>
   );
