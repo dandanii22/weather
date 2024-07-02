@@ -4,13 +4,17 @@ import { useEffect, useState } from "react";
 import AddDetail from "./AddDetail";
 import Hourly from "./Hourly";
 import useDebounce from "../hooks/useDebounce";
+import { getWeatherUrl } from "../util/getWeatherUrl";
 
 // eslint-disable-next-line react/prop-types
 const DetailCard = ({ keyword, closeDetail, hours, addFav }) => {
-  const [city, setCity] = useState("0");
-  const [country, setCountry] = useState("0");
-  const [temp, setTemp] = useState(0);
-  const [imgCode, setImgCode] = useState("09d");
+  const [weatherData, setWeatherData] = useState({
+    city: "",
+    country: "",
+    temp: 0,
+    imgCode: "09d",
+  });
+
   const [classOn, setClassOn] = useState(true);
 
   const changeDetail = () => {
@@ -21,13 +25,15 @@ const DetailCard = ({ keyword, closeDetail, hours, addFav }) => {
 
   useEffect(() => {
     if (debouncedValue) {
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${debouncedValue}&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
+      const url = getWeatherUrl("/weather", debouncedValue);
       axios.get(url).then((res) => {
         const data = res.data;
-        setCity(data.name);
-        setCountry(data.sys.country);
-        setTemp(data.main.temp);
-        setImgCode(data.weather[0].icon);
+        setWeatherData({
+          city: data.name,
+          country: data.sys.country,
+          temp: data.main.temp,
+          imgCode: data.weather[0].icon,
+        });
       });
     }
   }, [debouncedValue]);
@@ -39,12 +45,12 @@ const DetailCard = ({ keyword, closeDetail, hours, addFav }) => {
         <i className="xi-close" onClick={closeDetail}></i>
       </div>
       <div className="detailWeather">
-        <img src={`../../public/images/${imgCode}.png`} alt="" />
+        <img src={`../../public/images/${weatherData.imgCode}.png`} alt="" />
         <div>
           <p className="cityname">
-            {city} , {country}
+            {weatherData.city} , {weatherData.country}
           </p>
-          <p className="temper">{Math.round(temp * 10) / 10}℃</p>
+          <p className="temper">{Math.round(weatherData.temp * 10) / 10}℃</p>
         </div>
       </div>
       <div className="tag">

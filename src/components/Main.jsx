@@ -1,6 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useEffect, useRef, useState } from "react";
 import { MainWrap } from "../styled/Style";
+import { getWeatherUrl } from "../util/getWeatherUrl";
 import SearchInput from "./SearchInput";
 import EditBtn from "./EditBtn";
 import axios from "axios";
@@ -21,7 +22,7 @@ const Main = () => {
   useEffect(() => {
     const InitialData = async () => {
       for (let i = 0; i < test.length; i++) {
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${test[i]}&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
+        const url = getWeatherUrl("/weather", test[i]);
         //'변수 = await 값' 인 경우 그 값이 변수에 저장
         const res = await axios.get(url);
         const data = res.data;
@@ -81,7 +82,7 @@ const Main = () => {
     if (isAlreadyFav) {
       alert("이미 즐겨찾기에 등록되어 있습니다.");
     } else {
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${keyword}&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
+      const url = getWeatherUrl("/weather", keyword);
       axios.get(url).then((res) => {
         const data = res.data;
         setWeatherData([

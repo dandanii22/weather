@@ -2,6 +2,7 @@ import axios from "axios";
 import { HourlyDetail } from "../styled/Style";
 import { useEffect, useState } from "react";
 import useDebounce from "../hooks/useDebounce";
+import { getWeatherUrl } from "../util/getWeatherUrl";
 
 const Hourly = ({ keyword, hours }) => {
   const [forecast, setForecast] = useState([]);
@@ -10,7 +11,7 @@ const Hourly = ({ keyword, hours }) => {
 
   useEffect(() => {
     if (debouncedValue) {
-      const url = `https://api.openweathermap.org/data/2.5/forecast?q=${debouncedValue}&appid=dd67186d5fda0b5940d40327767f0935&units=metric`;
+      const url = getWeatherUrl("/forecast", debouncedValue);
       axios.get(url)?.then((res) => {
         const data = res.data;
         setForecast([...data.list]);
