@@ -16,7 +16,7 @@ const NightCard = ({ item, editBtn, onDel, showDatailPage }) => {
           </p>
           <img
             className="weathericon"
-            src={`../../public/images/${imgCode}.png`}
+            src={`https://dandanii22.github.io/images/${imgCode}.png`}
             alt="weathericon"
           />
           <p className="temper">{Math.round(temp * 10) / 10}℃</p>
