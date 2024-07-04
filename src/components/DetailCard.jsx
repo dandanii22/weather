@@ -46,7 +46,7 @@ const DetailCard = ({ keyword, closeDetail, hours, addFav }) => {
       </div>
       <div className="detailWeather">
         <img
-          src={`https://dandanii22.github.io/images/${weatherData.imgCode}.png`}
+          src={`https://dandanii22.github.io/weather/images/${weatherData.imgCode}.png`}
           alt=""
         />
         <div>

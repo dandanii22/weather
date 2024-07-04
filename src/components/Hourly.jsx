@@ -42,7 +42,7 @@ const Hourly = ({ keyword, hours }) => {
                     </span>
                     <img
                       className="info-weather-icon"
-                      src={`https://dandanii22.github.io/images/${item.weather[0].icon}.png`}
+                      src={`https://dandanii22.github.io/weather/images/${item.weather[0].icon}.png`}
                       alt="weather-icon"
                     />
                     <span className="row-temp">
@@ -60,7 +60,7 @@ const Hourly = ({ keyword, hours }) => {
                     </span>
                     <img
                       className="info-weather-icon"
-                      src={`https://dandanii22.github.io/images/${item.weather[0].icon}.png`}
+                      src={`https://dandanii22.github.io/weather/images/${item.weather[0].icon}.png`}
                       alt="weather-icon"
                     />
                     <span className="row-temp">
